@@ -36,5 +36,13 @@ class UsersSeeder extends Seeder
             'group' => 2,
             'password' => Hash::make('123'),
         ]);
+        DB::table('users')->insert([
+            'name' => 'Hebert',
+            'last_name' => 'Boom',
+            'document' => '11111111111',
+            'email' => 'hebert@dbdigitalthings.com',
+            'group' => 2,
+            'password' => Hash::make('123'),
+        ]);
     }
 }

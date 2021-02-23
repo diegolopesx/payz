@@ -15,4 +15,14 @@ class Transaction extends Model
     protected $fillable = [
         'value','payer', 'payee'
     ];
+
+    public function payer()
+    {
+        return $this->hasOne('App\Models\User', 'id', 'payer');
+    }
+
+    public function payee()
+    {
+        return $this->hasOne('App\Models\User', 'id', 'payee');
+    }
 }

@@ -26,4 +26,5 @@ $router->group(['prefix' => 'auth'], function () use ($router) {
 
 $router->group(['prefix' => 'transactions'], function () use ($router) {
     $router->post('create', 'TransactionsController@create');
+    $router->get('index', 'TransactionsController@index');
 });

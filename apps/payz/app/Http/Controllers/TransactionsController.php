@@ -21,7 +21,7 @@ class TransactionsController extends Controller
     }
 
     /**
-     * Cria um nonvo usuário.
+     * Cria uma nova transaction.
      *
      * @param   Request  $request
      *
@@ -58,5 +58,23 @@ class TransactionsController extends Controller
             }));
         }
         return response()->json(['message' => 'Você não pode realizar essa ação.']);
+    }
+
+    /**
+     * Lista todas transactions.
+     *
+     * @param   Request  $request
+     *
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+
+    public function index(): JsonResponse
+    {
+        $transactions = Transaction::with('payer','payee')
+            ->where('payer', auth()->user()->id)
+            ->orWhere('payee', auth()->user()->id)
+            ->paginate(30);
+        return response()->json($transactions);
     }
 }
