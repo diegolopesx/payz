@@ -12,4 +12,10 @@ docker-compose up -d
 
 Criar Schema "payz"
 
-# 
+# Na pasta do projeto Payz executar 
+
+cd apps/payz
+composer install
+
+# Migrate com Seed
+php artisan migrate:fresh --seed 
