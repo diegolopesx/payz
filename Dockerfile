@@ -23,3 +23,5 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 RUN docker-php-ext-install -j$(nproc) pdo pdo_mysql mysqli curl dom exif fileinfo json mbstring sodium opcache xml zip iconv filter simplexml
 RUN rm -rf /var/lib/apt/lists/*
 RUN apt-get clean
+RUN cd /apps/payz
+RUN composer install
