@@ -1,0 +1,70 @@
+
+server {
+    
+    listen 80;
+    server_name localhost;
+    client_max_body_size 100M;
+
+    error_log  /var/log/nginx/error.log;
+    access_log /var/log/nginx/access.log;
+    root /var/www/html/;
+    #gzip on;
+    gzip_buffers 16 8k;
+    gzip_min_length  1;
+    gzip_comp_level 9;
+    gzip_vary on;
+    gzip_proxied any;
+    #gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript application/xhtml+xml application/x-www-form-urlencoded;
+    fastcgi_buffers 8 16k;
+    fastcgi_buffer_size 32k;
+    #
+
+location / {
+      
+
+
+      dav_methods PUT DELETE MKCOL COPY MOVE;
+
+      # Preflighted requestis
+      if ($request_method = OPTIONS) {
+        add_header "Access-Control-Allow-Origin" *;
+        add_header "Access-Control-Allow-Methods" "GET, POST, OPTIONS, HEAD, DELETE";
+        add_header "Access-Control-Allow-Headers" "Authorization, Origin, X-Requested-With, Content-Type, Accept";
+        return 200;
+      }
+
+      # CORS WHITELIST EVERYTHING
+      # This is allowing everything because I am running
+      # locally so there should be no security issues.
+      if ($request_method = (GET|POST|OPTIONS|HEAD|DELETE)) {
+        add_header "Access-Control-Allow-Origin" *;
+        add_header "Access-Control-Allow-Headers" "Authorization, Origin, X-Requested-With, Content-Type, Accept";
+      }
+
+       try_files $uri $uri/ /index.php$is_args$args;
+    
+}
+
+    location = /favicon.ico {
+                log_not_found off;
+                access_log off;
+    }
+    location = /robots.txt {
+                allow all;
+                log_not_found off;
+                access_log off;
+    }
+    location ~* ^.+\.(ogg|ogv|svg|svgz|eot|otf|woff|mp4|ttf|rss|atom|jpg|jpeg|gif|png|ico|zip|tgz|gz|rar|bz2|doc|xls|exe|ppt|tar|mid|midi|wav|bmp|rtf|css|js)$ {
+       access_log off; log_not_found off; expires max; add_header    Cache-Control  public;
+        }
+    location ~ .php$ {
+       add_header Access-Control-Allow-Origin *;
+                try_files $uri =404;
+                include fastcgi_params;
+                fastcgi_index index.php;
+                fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                fastcgi_read_timeout 5m;
+                fastcgi_pass php:9000;
+        }
+
+}
